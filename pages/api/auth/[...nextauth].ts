@@ -19,6 +19,11 @@ export const authOptions: NextAuthOptions = {
   theme: {
     colorScheme: "dark",
   },
+  callbacks: {
+    session: ({ session, user }) => {
+      return { ...session, uid: user.id };
+    },
+  },
 };
 
 export default NextAuth(authOptions);

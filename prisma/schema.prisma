@@ -45,6 +45,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  lists List[]
+  likes Like[]
 }
 
 model VerificationToken {
@@ -53,4 +55,40 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model List {
+    id String @id @default(uuid())
+    owner_id String
+    owner User @relation(fields: [owner_id], references: [id])
+    name String
+    description String?
+    entries Entry[]
+    likes Like[] 
+}
+
+model Entry {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  list_id String
+  spot_id Int
+  list List @relation(fields: [list_id], references: [id], onDelete: Cascade)
+  spot Spot @relation(fields: [spot_id], references: [id])
+}
+
+model Spot {
+  id Int @id @default(autoincrement())
+  lat Float
+  lon Float 
+  @@unique([lat,lon])
+  entries Entry[]
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+  user_id String
+  user User @relation(fields: [user_id], references: [id])
+  list_id String
+  list List @relation(fields: [list_id], references: [id])
 }

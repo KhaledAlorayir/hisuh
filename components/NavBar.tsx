@@ -1,8 +1,11 @@
 import { Flex, Heading, Button } from "@chakra-ui/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 type Props = {};
 
 const NavBar = (props: Props) => {
+  const { data, status } = useSession();
+
   return (
     <Flex
       bg="whiteAlpha.50"
@@ -12,7 +15,11 @@ const NavBar = (props: Props) => {
       py={6}
     >
       <Heading>Hisuh</Heading>
-      <Button>Login</Button>
+      {status === "unauthenticated" ? (
+        <Button onClick={() => signIn()}>Login</Button>
+      ) : (
+        <Button onClick={() => signOut()}>Logout</Button>
+      )}
     </Flex>
   );
 };

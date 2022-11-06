@@ -1,19 +1,15 @@
-import { useSession, signIn, signOut } from "next-auth/react";
-
+import { useSession } from "next-auth/react";
 export default function Home() {
-  const { data: session } = useSession();
-  if (session) {
-    return (
-      <>
-        Signed in as {session?.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
+  const { data } = useSession();
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <h1
+      onClick={async () => {
+        fetch("/api/list", { method: "POST" })
+          .then((res) => res.json())
+          .then((v) => console.log(v));
+      }}
+    >
+      hello
+    </h1>
   );
 }
