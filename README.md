@@ -12,11 +12,18 @@
   - [x] discord signin
 - [x] choose and setup a UI component framework
   - https://chakra-ui.com/
-- [] database desgin
+- [x] database desgin
 
-### fetures
+### API Routes
 
-- [] auth with social providers (google and discord)
+- [x] create lists
+- [x] delete lists
+- [] update lists
+- [] like lists
+
+### App
+
+- [x] auth with social providers (google and discord)
 - [] create lists
 - [] delete lists
 - [] update lists
