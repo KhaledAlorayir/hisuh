@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
-import { PostListBodySchema } from "shared/schemas";
+import { ListBodySchema } from "shared/schemas";
+import { entryInsert } from "shared/types";
 import prisma from "shared/prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const body = PostListBodySchema.safeParse(req.body);
+  const body = ListBodySchema.safeParse(req.body);
 
   if (!body.success) {
     return res.status(400).json(body.error.issues);
@@ -22,11 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { entries, name, description } = body.data;
 
-  let entriesList: {
-    spot_id: number;
-    description: string | undefined;
-    name: string;
-  }[] = [];
+  let entriesList: entryInsert[] = [];
 
   for (let i = 0; i < entries.length; i++) {
     const spot = await prisma.spot.upsert({
@@ -60,5 +57,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  res.status(200).json({ list });
+  res.status(201).json({ list });
 };

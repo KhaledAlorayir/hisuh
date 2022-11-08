@@ -3,6 +3,8 @@ import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "shared/prisma";
 import { z } from "zod";
+import { ListBodySchema } from "shared/schemas";
+import { entryInsert } from "shared/types";
 
 interface HandlerReturn {
   status: number;
@@ -48,10 +50,64 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "PATCH") {
+    const { data, status } = await Update(req, params.data.list_id);
+    return res.status(status).json(data);
   }
   return res.status(405).json({ message: "Method Not Allowed" });
 };
 
-const Update = (): HandlerReturn => {
-  return { data: null, status: 404 };
+const Update = async (
+  req: NextApiRequest,
+  list_id: string
+): Promise<HandlerReturn> => {
+  const body = ListBodySchema.safeParse(req.body);
+  if (!body.success) {
+    return { data: body.error.issues, status: 400 };
+  }
+
+  const { entries, name, description } = body.data;
+
+  await prisma.entry.deleteMany({
+    where: {
+      list_id,
+    },
+  });
+
+  let entriesList: entryInsert[] = [];
+
+  for (let i = 0; i < entries.length; i++) {
+    const spot = await prisma.spot.upsert({
+      create: {
+        lat: entries[i].lat,
+        lon: entries[i].lon,
+      },
+      update: {},
+      where: {
+        lat_lon: {
+          lat: entries[i].lat,
+          lon: entries[i].lon,
+        },
+      },
+    });
+    entriesList.push({
+      spot_id: spot.id,
+      description: entries[i].description,
+      name: entries[i].name,
+    });
+  }
+
+  const updatedList = await prisma.list.update({
+    where: {
+      id: list_id,
+    },
+    data: {
+      name,
+      description,
+      entries: {
+        createMany: { data: entriesList },
+      },
+    },
+  });
+
+  return { data: updatedList, status: 200 };
 };

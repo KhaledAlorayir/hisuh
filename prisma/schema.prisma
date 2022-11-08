@@ -91,4 +91,5 @@ model Like {
   user User @relation(fields: [user_id], references: [id])
   list_id String
   list List @relation(fields: [list_id], references: [id])
+  @@unique([list_id,user_id])
 }

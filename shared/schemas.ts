@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PostListBodySchema = z.object({
+export const ListBodySchema = z.object({
   name: z.string().min(5).max(60),
   description: z.string().min(5).max(150).optional(),
   entries: z
