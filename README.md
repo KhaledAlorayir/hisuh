@@ -18,8 +18,8 @@
 
 - [x] create lists
 - [x] delete lists
-- [] update lists
-- [] like lists
+- [x] update lists
+- [z] like lists
 
 ### App
 
