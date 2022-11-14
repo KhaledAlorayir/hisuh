@@ -1,14 +1,17 @@
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
-import { Box, CircularProgress, Center, Text } from "@chakra-ui/react";
+import { Box, CircularProgress, Center, Text, Button } from "@chakra-ui/react";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { MarkerItem } from "shared/types";
+import { ListInfo, MarkerItem } from "shared/types";
 import useGetPlaceDetails from "shared/hooks/useGetPlaceDetails";
+import { FieldValues, UseFormSetValue } from "react-hook-form";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 type Props = {
   marker: MarkerItem | undefined;
   setMarker: Dispatch<SetStateAction<MarkerItem | undefined>>;
+  setValue: UseFormSetValue<FieldValues>;
 };
 
-const Map = ({ marker, setMarker }: Props) => {
+const Map = ({ marker, setMarker, setValue }: Props) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",
   });
@@ -25,14 +28,15 @@ const Map = ({ marker, setMarker }: Props) => {
   }, []);
 
   const clickHandler = (e: any) => {
+    console.log(e);
     if (e.placeId) {
       mutate(e.placeId, {
         onSuccess: (res) => {
           setMarker({
             lat: e.latLng?.lat() || 0,
             lng: e.latLng?.lng() || 0,
-            name: res.name,
           });
+          setValue("name", res.name);
         },
         onError: () => {
           setMarker({
@@ -42,6 +46,7 @@ const Map = ({ marker, setMarker }: Props) => {
         },
       });
     } else {
+      console.log(marker);
       setMarker({ lat: e.latLng?.lat() || 0, lng: e.latLng?.lng() || 0 });
     }
   };
@@ -62,19 +67,24 @@ const Map = ({ marker, setMarker }: Props) => {
   }
 
   return (
-    <Box height="60%" py={8}>
-      <GoogleMap
-        onClick={clickHandler}
-        zoom={10}
-        options={{ disableDefaultUI: true }}
-        center={{
-          lat: location?.lat || 24.774344,
-          lng: location?.lng || 46.743713,
-        }}
-        mapContainerStyle={{ height: "100%", width: "100%" }}
-      >
-        {marker && <Marker position={{ lat: marker.lat, lng: marker.lng }} />}
-      </GoogleMap>
+    <Box py={4}>
+      <Text mb={4} fontSize="lg" fontWeight="bold" textAlign="center">
+        choose a place from the map to add it
+      </Text>
+      <Box h="50vh">
+        <GoogleMap
+          onClick={clickHandler}
+          zoom={10}
+          options={{ disableDefaultUI: true }}
+          center={{
+            lat: location?.lat || 24.774344,
+            lng: location?.lng || 46.743713,
+          }}
+          mapContainerStyle={{ height: "100%", width: "100%" }}
+        >
+          {marker && <Marker position={{ lat: marker.lat, lng: marker.lng }} />}
+        </GoogleMap>
+      </Box>
     </Box>
   );
 };

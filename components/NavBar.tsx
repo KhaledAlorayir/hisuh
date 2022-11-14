@@ -1,6 +1,16 @@
-import { Flex, Heading, Button } from "@chakra-ui/react";
+import {
+  Flex,
+  Heading,
+  Button,
+  Avatar,
+  Spinner,
+  Menu,
+  MenuList,
+  MenuItem,
+  MenuButton,
+} from "@chakra-ui/react";
 import { useSession, signIn, signOut } from "next-auth/react";
-
+import Link from "next/link";
 type Props = {};
 
 const NavBar = (props: Props) => {
@@ -14,11 +24,30 @@ const NavBar = (props: Props) => {
       px={8}
       py={6}
     >
-      <Heading>Hisuh</Heading>
+      <Heading>
+        <Link href="/">Hisuh</Link>
+      </Heading>
       {status === "unauthenticated" ? (
         <Button onClick={() => signIn()}>Login</Button>
+      ) : status === "authenticated" ? (
+        <Flex alignItems="center" gap={4}>
+          <Menu>
+            <MenuButton>
+              <Avatar
+                src={data.user?.image || undefined}
+                name={data.user?.name || ""}
+              />
+            </MenuButton>
+            <MenuList>
+              <MenuItem>
+                <Link href="/create">Create a list</Link>
+              </MenuItem>
+              <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        </Flex>
       ) : (
-        <Button onClick={() => signOut()}>Logout</Button>
+        <Spinner />
       )}
     </Flex>
   );

@@ -7,5 +7,16 @@ export interface entryInsert {
 export interface MarkerItem {
   lat: number;
   lng: number;
-  name?: string;
+}
+
+export interface Entry {
+  name: string;
+  description?: string;
+  lat: number;
+  lon: number;
+}
+
+export interface ListInfo {
+  name: string;
+  description?: string;
 }

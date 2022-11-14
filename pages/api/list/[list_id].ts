@@ -12,6 +12,10 @@ interface HandlerReturn {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== "DELETE" && req.method !== "PATCH") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+
   const paramsSchema = z.object({
     list_id: z.string().uuid("invalid list id"),
   });
@@ -53,7 +57,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { data, status } = await Update(req, params.data.list_id);
     return res.status(status).json(data);
   }
-  return res.status(405).json({ message: "Method Not Allowed" });
 };
 
 const Update = async (
