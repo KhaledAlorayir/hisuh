@@ -24,6 +24,8 @@ type Props = {
   entries: Entry[];
   setEntries: Dispatch<SetStateAction<Entry[]>>;
   reset: UseFormReset<FieldValues>;
+  editedEntry: Entry | undefined;
+  setEditedEntry: Dispatch<SetStateAction<Entry | undefined>>;
 };
 
 const AddPlaceForm = ({
@@ -36,29 +38,39 @@ const AddPlaceForm = ({
   setEntries,
   setMarker,
   reset,
+  editedEntry,
+  setEditedEntry,
 }: Props) => {
   const toast = useToast();
 
   const submitHandler = (values: any) => {
+    if (editedEntry) {
+      editHandler(values.name.trim(), values.description.trim());
+    } else {
+      addHandler(values.name.trim(), values.description.trim());
+    }
+  };
+
+  const addHandler = (name: string, description: string | undefined) => {
     if (entries.length < 15) {
       setEntries((state) => [
         ...state,
         {
-          name: values.name.trim(),
-          description: values.description.trim() || undefined,
+          name: name,
+          description: description,
           lat: marker?.lat || 0,
           lon: marker?.lng || 0,
+          addedDate: Date.now(),
         },
       ]);
       toast({
         title: "place has been added",
-        description: `${values.name.trim()} has been added to the list!`,
+        description: `${name} has been added to the list!`,
         status: "success",
         isClosable: true,
         duration: 8000,
       });
-      setMarker(undefined);
-      reset();
+      endHandler();
     } else {
       toast({
         title: "only 15 places allowed",
@@ -69,6 +81,38 @@ const AddPlaceForm = ({
       });
     }
   };
+
+  const editHandler = (name: string, description: string | undefined) => {
+    if (editedEntry) {
+      setEntries((state) =>
+        state.map((entry) =>
+          entry.addedDate !== editedEntry.addedDate
+            ? entry
+            : {
+                ...entry,
+                name,
+                description,
+                lat: marker?.lat || 0,
+                lon: marker?.lng || 0,
+              }
+        )
+      );
+      toast({
+        title: "place has been edited",
+        status: "success",
+        isClosable: true,
+        duration: 8000,
+      });
+      endHandler();
+    }
+  };
+
+  const endHandler = () => {
+    setMarker(undefined);
+    setEditedEntry(undefined);
+    reset();
+  };
+
   return (
     <Box mt={2}>
       {marker && (
@@ -110,9 +154,14 @@ const AddPlaceForm = ({
             />
             <FormError error={errors.description} />
           </Box>
-          <Button disabled={!isValid} variant="outline" type="submit">
-            Add Place
+          <Button disabled={!isValid} variant="outline" type="submit" mr={4}>
+            {editedEntry ? "Edit" : "Add"} Place
           </Button>
+          {editedEntry && (
+            <Button onClick={endHandler} variant="outline" colorScheme="red">
+              Cancel
+            </Button>
+          )}
         </form>
       )}
     </Box>

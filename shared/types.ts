@@ -1,3 +1,5 @@
+import { number } from "zod";
+
 export interface entryInsert {
   spot_id: number;
   description: string | undefined;
@@ -14,6 +16,7 @@ export interface Entry {
   description?: string;
   lat: number;
   lon: number;
+  addedDate: number;
 }
 
 export interface ListInfo {

@@ -1,10 +1,9 @@
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
-import { Box, CircularProgress, Center, Text, Button } from "@chakra-ui/react";
+import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
+import { Box, CircularProgress, Center, Text } from "@chakra-ui/react";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { ListInfo, MarkerItem } from "shared/types";
+import { MarkerItem } from "shared/types";
 import useGetPlaceDetails from "shared/hooks/useGetPlaceDetails";
 import { FieldValues, UseFormSetValue } from "react-hook-form";
-import { ArrowBackIcon } from "@chakra-ui/icons";
 type Props = {
   marker: MarkerItem | undefined;
   setMarker: Dispatch<SetStateAction<MarkerItem | undefined>>;
@@ -18,7 +17,7 @@ const Map = ({ marker, setMarker, setValue }: Props) => {
 
   const [location, setLocation] = useState<MarkerItem>();
   const { mutate } = useGetPlaceDetails();
-
+  //replace with onload, might not need state
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
@@ -28,7 +27,6 @@ const Map = ({ marker, setMarker, setValue }: Props) => {
   }, []);
 
   const clickHandler = (e: any) => {
-    console.log(e);
     if (e.placeId) {
       mutate(e.placeId, {
         onSuccess: (res) => {
@@ -46,7 +44,6 @@ const Map = ({ marker, setMarker, setValue }: Props) => {
         },
       });
     } else {
-      console.log(marker);
       setMarker({ lat: e.latLng?.lat() || 0, lng: e.latLng?.lng() || 0 });
     }
   };
@@ -82,7 +79,9 @@ const Map = ({ marker, setMarker, setValue }: Props) => {
           }}
           mapContainerStyle={{ height: "100%", width: "100%" }}
         >
-          {marker && <Marker position={{ lat: marker.lat, lng: marker.lng }} />}
+          {marker && (
+            <MarkerF position={{ lat: marker.lat, lng: marker.lng }} />
+          )}
         </GoogleMap>
       </Box>
     </Box>
