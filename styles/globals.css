@@ -1,0 +1,7 @@
+[data-reach-combobox-option][data-highlighted] {
+  background-color: black !important;
+}
+
+[data-reach-combobox-option]:hover {
+  background-color: black !important;
+}

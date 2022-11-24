@@ -60,7 +60,8 @@ const AddPlaceForm = ({
           description: description,
           lat: marker?.lat || 0,
           lon: marker?.lng || 0,
-          addedDate: Date.now(),
+          place_id: marker?.place_id,
+          id: Date.now(),
         },
       ]);
       toast({
@@ -86,7 +87,7 @@ const AddPlaceForm = ({
     if (editedEntry) {
       setEntries((state) =>
         state.map((entry) =>
-          entry.addedDate !== editedEntry.addedDate
+          entry.id !== editedEntry.id
             ? entry
             : {
                 ...entry,
@@ -94,6 +95,7 @@ const AddPlaceForm = ({
                 description,
                 lat: marker?.lat || 0,
                 lon: marker?.lng || 0,
+                place_id: marker?.place_id,
               }
         )
       );
@@ -114,7 +116,7 @@ const AddPlaceForm = ({
   };
 
   return (
-    <Box mt={2}>
+    <Box my={2}>
       {marker && (
         <form onSubmit={handleSubmit(submitHandler)}>
           <Box mb={4}>

@@ -39,9 +39,9 @@ const NavBar = (props: Props) => {
               />
             </MenuButton>
             <MenuList>
-              <MenuItem>
-                <Link href="/create">Create a list</Link>
-              </MenuItem>
+              <Link href="/create">
+                <MenuItem>Create a list</MenuItem>
+              </Link>
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </MenuList>
           </Menu>

@@ -1,36 +1,46 @@
-import React, { Dispatch, SetStateAction } from "react";
-import { Box, Center, CircularProgress, Text } from "@chakra-ui/react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  MarkerF,
-  InfoWindow,
-  InfoWindowF,
-} from "@react-google-maps/api";
+import { Box, Button, Flex, Text, Center, Heading } from "@chakra-ui/react";
 import { Entry } from "shared/types";
 import { ListInfo } from "shared/types";
+import ListInfoMap from "components/ListInfoMap";
+import useCreateList from "shared/hooks/useCreateList";
+import { Dispatch, SetStateAction } from "react";
+import Link from "next/link";
 
 type Props = {
   entries: Entry[];
   listInfo: ListInfo | undefined;
-  setEntries: Dispatch<SetStateAction<Entry[]>>;
+  setShowControls: Dispatch<SetStateAction<boolean>>;
 };
 
-const Conformation = ({ entries, listInfo, setEntries }: Props) => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",
-  });
-  if (!isLoaded) {
+const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
+  const { mutate, isLoading, isSuccess, data } = useCreateList();
+
+  const submitHandler = () => {
+    if (listInfo) {
+      setShowControls(false);
+      mutate(
+        { entries_info: entries, list_info: listInfo },
+        {
+          onError: () => {
+            setShowControls(true);
+          },
+        }
+      );
+    }
+  };
+
+  if (isSuccess) {
     return (
-      <Center h="100%">
-        <CircularProgress isIndeterminate />
-      </Center>
-    );
-  }
-  if (loadError) {
-    return (
-      <Center h="100%">
-        <Text fontSize="xl">an error has occurred</Text>
+      <Center height="100%">
+        <Box textAlign="center">
+          <Heading as="h3" size="lg" mb={4}>
+            List has been created!🥳
+          </Heading>
+          <Text fontWeight="semibold" mb={4}>
+            use this link to share the list
+          </Text>
+          <Link href="#">domain.com/list/{data.id}</Link>
+        </Box>
       </Center>
     );
   }
@@ -53,33 +63,18 @@ const Conformation = ({ entries, listInfo, setEntries }: Props) => {
               {listInfo.description}
             </Text>
           )}
-          <Box h="50vh">
-            <GoogleMap
-              zoom={10}
-              options={{ disableDefaultUI: true, clickableIcons: false }}
-              center={{
-                lat: entries[0].lat,
-                lng: entries[0].lon,
-              }}
-              mapContainerStyle={{ height: "100%", width: "100%" }}
+          <ListInfoMap entries={entries} />
+          <Flex my={8} justifyContent="flex-end">
+            <Button
+              w={{ base: "100%", md: "auto" }}
+              colorScheme="messenger"
+              onClick={submitHandler}
+              isLoading={isLoading}
+              loadingText="creating the list..."
             >
-              {entries.map(({ addedDate, lat, lon, name, description }) => (
-                <MarkerF
-                  title={name}
-                  key={addedDate}
-                  position={{ lat, lng: lon }}
-                />
-              ))}
-              <InfoWindow
-                options={{ pixelOffset: new window.google.maps.Size(0, -40) }}
-                position={{ lat: entries[0].lat, lng: entries[0].lon }}
-              >
-                <Box h="20vh" w="20vw" textAlign="center" bgColor="red">
-                  <Text textColor="black">this is a placeasddddddsadsdas</Text>
-                </Box>
-              </InfoWindow>
-            </GoogleMap>
-          </Box>
+              Create List!
+            </Button>
+          </Flex>
         </Box>
       )}
     </>

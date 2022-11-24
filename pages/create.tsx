@@ -38,13 +38,8 @@ const create = (props: Props) => {
   const [listInfo, setListInfo] = useState<ListInfo>();
   const [editedEntry, setEditedEntry] = useState<Entry>();
   const [isConformation, setIsConformation] = useState<boolean>(false);
+  const [showControls, setShowControls] = useState<boolean>(true);
 
-  /*
-    4- conformaition page
-      - replace useeffect with onload
-      - bounds
-    3- search
-  */
   const {
     register: placeRegister,
     handleSubmit: placeHandleSubmit,
@@ -78,7 +73,7 @@ const create = (props: Props) => {
     return (
       <Box h="100%">
         <Controls
-          leftShown={true}
+          leftShown={showControls}
           rightShown={false}
           leftText="edit places"
           leftAction={() => setIsConformation(false)}
@@ -86,7 +81,7 @@ const create = (props: Props) => {
         <Conformation
           entries={entries}
           listInfo={listInfo}
-          setEntries={setEntries}
+          setShowControls={setShowControls}
         />
       </Box>
     );

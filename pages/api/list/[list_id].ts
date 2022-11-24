@@ -83,6 +83,7 @@ const Update = async (
       create: {
         lat: entries[i].lat,
         lon: entries[i].lon,
+        place_id: entries[i].place_id,
       },
       update: {},
       where: {

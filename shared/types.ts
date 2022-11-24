@@ -9,6 +9,7 @@ export interface entryInsert {
 export interface MarkerItem {
   lat: number;
   lng: number;
+  place_id?: string;
 }
 
 export interface Entry {
@@ -16,10 +17,23 @@ export interface Entry {
   description?: string;
   lat: number;
   lon: number;
-  addedDate: number;
+  id: number;
+  place_id?: string;
 }
 
 export interface ListInfo {
   name: string;
   description?: string;
 }
+
+export interface APIError {
+  message: string;
+}
+
+export type MapsLibrary = (
+  | "places"
+  | "drawing"
+  | "geometry"
+  | "localContext"
+  | "visualization"
+)[];

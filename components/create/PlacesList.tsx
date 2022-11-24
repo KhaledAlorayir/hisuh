@@ -33,7 +33,7 @@ const PlacesList = ({
   const toast = useToast();
 
   const deleteHandler = (date: number, name: string) => {
-    setEntries((state) => state.filter(({ addedDate }) => date !== addedDate));
+    setEntries((state) => state.filter(({ id }) => date !== id));
     toast({
       title: "place has been deleted",
       description: `${name} has been added to the list!`,
@@ -42,7 +42,7 @@ const PlacesList = ({
       duration: 8000,
     });
 
-    if (editedEntry && editedEntry.addedDate === date) {
+    if (editedEntry && editedEntry.id === date) {
       setMarker(undefined);
       setEditedEntry(undefined);
       reset();
@@ -68,14 +68,11 @@ const PlacesList = ({
           </Text>
           <UnorderedList spacing={{ base: 4, md: 2 }}>
             {entries.map((entry) => (
-              <ListItem
-                fontSize={{ base: "md", md: "lg" }}
-                key={entry.addedDate}
-              >
+              <ListItem fontSize={{ base: "md", md: "lg" }} key={entry.id}>
                 <Flex alignItems="center" gap="4">
                   <Text>{entry.name}</Text>
                   <DeleteIcon
-                    onClick={() => deleteHandler(entry.addedDate, entry.name)}
+                    onClick={() => deleteHandler(entry.id, entry.name)}
                     cursor="pointer"
                     _hover={{ opacity: 0.8 }}
                   />

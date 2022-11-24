@@ -20,11 +20,11 @@ const Controls = ({
   rightAction,
 }: Props) => {
   return (
-    <Flex justifyContent="space-between" pt={2}>
+    <Flex justifyContent="space-between">
       {leftShown && (
         <Button
           onClick={leftAction}
-          my={2}
+          my={4}
           variant="ghost"
           leftIcon={<ArrowBackIcon />}
         >
@@ -34,7 +34,7 @@ const Controls = ({
       {rightShown && (
         <Button
           onClick={rightAction}
-          my={2}
+          my={4}
           variant="ghost"
           rightIcon={<ArrowForwardIcon />}
         >

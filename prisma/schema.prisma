@@ -80,7 +80,8 @@ model Entry {
 model Spot {
   id Int @id @default(autoincrement())
   lat Float
-  lon Float 
+  lon Float
+  place_id String? 
   @@unique([lat,lon])
   entries Entry[]
 }

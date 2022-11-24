@@ -30,6 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       create: {
         lat: entries[i].lat,
         lon: entries[i].lon,
+        place_id: entries[i].place_id,
       },
       update: {},
       where: {
@@ -57,5 +58,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  res.status(201).json({ list });
+  res.status(201).json(list);
 };
