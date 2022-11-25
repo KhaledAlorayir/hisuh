@@ -8,15 +8,17 @@ import {
 import "@reach/combobox/styles.css";
 import { Box, Input, useToast } from "@chakra-ui/react";
 import usePlaces, { getGeocode, getLatLng } from "use-places-autocomplete";
+import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction } from "react";
+import { UseFormSetValue, FieldValues } from "react-hook-form";
 import { MarkerItem } from "shared/types";
-import { ChangeEvent, MutableRefObject } from "react";
 
 type Props = {
-  latLng: MarkerItem;
   mapRef: MutableRefObject<google.maps.Map | undefined>;
+  setMarker: Dispatch<SetStateAction<MarkerItem | undefined>>;
+  setValue: UseFormSetValue<FieldValues>;
 };
 
-const Search = ({ latLng, mapRef }: Props) => {
+const Search = ({ mapRef, setMarker, setValue: setAddValue }: Props) => {
   const center = mapRef.current!.getCenter();
   const {
     ready,
@@ -41,21 +43,21 @@ const Search = ({ latLng, mapRef }: Props) => {
     },
   });
 
-  // get country && set marker ??
-
   const toast = useToast();
 
   const selectHandler = async (id: string) => {
     const place = data.find(({ place_id }) => id === place_id);
 
     if (place && mapRef.current) {
-      setValue(place.structured_formatting.main_text, false);
+      setValue(place.description, false);
       clearSuggestions();
       try {
         const address = await getGeocode({ address: place.description });
         const { lat, lng } = getLatLng(address[0]);
         mapRef.current.panTo({ lat, lng });
         mapRef.current.setZoom(15);
+        setMarker({ lat, lng, place_id: place.place_id });
+        setAddValue("name", place.structured_formatting.main_text);
       } catch (error) {
         toast({
           duration: 5000,
@@ -85,7 +87,7 @@ const Search = ({ latLng, mapRef }: Props) => {
             <ComboboxList>
               {data.map((res) => (
                 <ComboboxOption value={res.place_id} key={res.place_id}>
-                  {res.structured_formatting.main_text}
+                  {res.description}
                 </ComboboxOption>
               ))}
             </ComboboxList>

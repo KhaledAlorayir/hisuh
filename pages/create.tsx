@@ -39,6 +39,10 @@ const create = (props: Props) => {
   const [editedEntry, setEditedEntry] = useState<Entry>();
   const [isConformation, setIsConformation] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(true);
+  const [center, setCenter] = useState<google.maps.LatLngLiteral>({
+    lat: 24.774265,
+    lng: 46.738586,
+  });
 
   const {
     register: placeRegister,
@@ -101,7 +105,13 @@ const create = (props: Props) => {
           setIsConformation(true);
         }}
       />
-      <Map setValue={placeSetValue} marker={marker} setMarker={setMarker} />
+      <Map
+        setValue={placeSetValue}
+        marker={marker}
+        setMarker={setMarker}
+        center={center}
+        setCenter={setCenter}
+      />
       <AddPlaceForm
         entries={entries}
         setEntries={setEntries}
@@ -123,6 +133,7 @@ const create = (props: Props) => {
         setValue={placeSetValue}
         editedEntry={editedEntry}
         reset={placeReset}
+        setCenter={setCenter}
       />
     </Box>
   );

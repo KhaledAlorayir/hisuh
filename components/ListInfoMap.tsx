@@ -8,6 +8,7 @@ import {
 import { useState } from "react";
 import { Entry } from "shared/types";
 import { getDirectionsUrl } from "shared/utils";
+import { libraries } from "shared/consts";
 
 type Props = {
   entries: Entry[];
@@ -16,6 +17,7 @@ type Props = {
 const ListInfo = ({ entries }: Props) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",
+    libraries,
   });
 
   const [active, setActive] = useState<number>(-1);

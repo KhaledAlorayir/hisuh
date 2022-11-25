@@ -19,6 +19,7 @@ type Props = {
   setValue: UseFormSetValue<FieldValues>;
   editedEntry: Entry | undefined;
   reset: UseFormReset<FieldValues>;
+  setCenter: Dispatch<SetStateAction<google.maps.LatLngLiteral>>;
 };
 
 const PlacesList = ({
@@ -29,6 +30,7 @@ const PlacesList = ({
   setValue,
   editedEntry,
   reset,
+  setCenter,
 }: Props) => {
   const toast = useToast();
 
@@ -57,6 +59,7 @@ const PlacesList = ({
     });
     setValue("name", entry.name);
     setValue("description", entry.description);
+    setCenter({ lat: entry.lat, lng: entry.lon });
   };
 
   return (
