@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { unstable_getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "shared/prisma";
-import { z } from "zod";
-import { ListBodySchema } from "shared/schemas";
+import { ListBodySchema, ListIdParamsSchema } from "shared/schemas";
 import { entryInsert } from "shared/types";
 
 interface HandlerReturn {
@@ -16,11 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(405).json({ message: "Method Not Allowed" });
   }
 
-  const paramsSchema = z.object({
-    list_id: z.string().uuid("invalid list id"),
-  });
-
-  const params = paramsSchema.safeParse(req.query);
+  const params = ListIdParamsSchema.safeParse(req.query);
 
   if (!params.success) {
     return res.status(400).json(params.error.issues);

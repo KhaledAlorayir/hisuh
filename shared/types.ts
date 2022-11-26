@@ -1,4 +1,4 @@
-import { number } from "zod";
+import { List, Spot, Entry as prismaEntry } from "@prisma/client";
 
 export interface entryInsert {
   spot_id: number;
@@ -14,11 +14,11 @@ export interface MarkerItem {
 
 export interface Entry {
   name: string;
-  description?: string;
+  description: string | null;
   lat: number;
   lon: number;
   id: number;
-  place_id?: string;
+  place_id: string | null;
 }
 
 export interface ListInfo {
@@ -37,3 +37,17 @@ export type MapsLibrary = (
   | "localContext"
   | "visualization"
 )[];
+
+export type ParsedList = List & {
+  entries: (prismaEntry & {
+    spot: Spot;
+  })[];
+  owner: {
+    name: string | null;
+    image: string | null;
+    id: string;
+  };
+  _count: {
+    likes: number;
+  };
+};

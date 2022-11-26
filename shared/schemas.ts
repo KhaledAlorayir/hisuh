@@ -15,3 +15,7 @@ export const ListBodySchema = z.object({
     )
     .max(15),
 });
+
+export const ListIdParamsSchema = z.object({
+  list_id: z.string().uuid("invalid list id"),
+});

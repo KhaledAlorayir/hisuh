@@ -37,9 +37,6 @@ const Search = ({ mapRef, setMarker, setValue: setAddValue }: Props) => {
         toUrlValue: center!.toUrlValue,
       },
       radius: 300 * 1000,
-      componentRestrictions: {
-        country: "SA",
-      },
     },
   });
 

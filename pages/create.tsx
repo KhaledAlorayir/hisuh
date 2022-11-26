@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import AddPlaceForm from "components/create/AddPlaceForm";
 import Map from "components/create/Map";
 import { useState } from "react";
@@ -8,7 +8,6 @@ import ListInfoForm from "components/create/ListInfoForm";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import { ArrowBackIcon } from "@chakra-ui/icons";
 import PlacesList from "components/create/PlacesList";
 import Conformation from "components/create/Conformation";
 import Controls from "components/create/Controls";

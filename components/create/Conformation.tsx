@@ -5,6 +5,7 @@ import ListInfoMap from "components/ListInfoMap";
 import useCreateList from "shared/hooks/useCreateList";
 import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
+import ListInfoTitle from "components/ListInfoTitle";
 
 type Props = {
   entries: Entry[];
@@ -39,7 +40,9 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
           <Text fontWeight="semibold" mb={4}>
             use this link to share the list
           </Text>
-          <Link href="#">domain.com/list/{data.id}</Link>
+          <Link href={`http://localhost:3000/list/${data.id}`}>
+            http://localhost:3000/list/{data.id}
+          </Link>
         </Box>
       </Center>
     );
@@ -49,20 +52,10 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
     <>
       {entries && listInfo && (
         <Box py={4}>
-          <Text mb={4} fontSize="lg" fontWeight="bold" textAlign="center">
-            {listInfo.name}
-          </Text>
-          {listInfo.description && (
-            <Text
-              color="whiteAlpha.800"
-              mb={4}
-              fontSize="sm"
-              fontWeight="semibold"
-              textAlign="center"
-            >
-              {listInfo.description}
-            </Text>
-          )}
+          <ListInfoTitle
+            name={listInfo.name}
+            description={listInfo.description}
+          />
           <ListInfoMap entries={entries} />
           <Flex my={8} justifyContent="flex-end">
             <Button

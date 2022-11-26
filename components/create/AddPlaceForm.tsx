@@ -51,7 +51,7 @@ const AddPlaceForm = ({
     }
   };
 
-  const addHandler = (name: string, description: string | undefined) => {
+  const addHandler = (name: string, description: string) => {
     if (entries.length < 15) {
       setEntries((state) => [
         ...state,
@@ -60,7 +60,7 @@ const AddPlaceForm = ({
           description: description,
           lat: marker?.lat || 0,
           lon: marker?.lng || 0,
-          place_id: marker?.place_id,
+          place_id: marker?.place_id || null,
           id: Date.now(),
         },
       ]);
@@ -83,7 +83,7 @@ const AddPlaceForm = ({
     }
   };
 
-  const editHandler = (name: string, description: string | undefined) => {
+  const editHandler = (name: string, description: string) => {
     if (editedEntry) {
       setEntries((state) =>
         state.map((entry) =>
@@ -95,7 +95,7 @@ const AddPlaceForm = ({
                 description,
                 lat: marker?.lat || 0,
                 lon: marker?.lng || 0,
-                place_id: marker?.place_id,
+                place_id: marker?.place_id || null,
               }
         )
       );
