@@ -3,12 +3,16 @@ import { ListIdParamsSchema } from "shared/schemas";
 import prisma from "shared/prisma";
 import { Entry, ParsedList } from "shared/types";
 import ListInfoMap from "components/ListInfoMap";
-import { Box, Flex } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import ListInfoTitle from "components/ListInfoTitle";
-import OwnerAvatar from "components/listInfo/OwnerAvatar";
 import Like from "components/listInfo/Like";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
+import PlacesList from "components/listInfo/PlacesList";
+import daysjs from "dayjs";
+import rt from "dayjs/plugin/relativeTime";
+
+daysjs.extend(rt);
 
 type Props = {
   entries: Entry[];
@@ -97,11 +101,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
 /*
   TODO:
-
   Migrate db to supabasee
 
   1- compelete this
-    - place list cards
+  - share api
+    - active place
   2- bookmarks list
   3- users page showing there lists
   4- ud lists
@@ -123,8 +127,24 @@ const ListInfo = ({
           initalIsLiked={isLiked}
           list_id={list.id}
         />
-        <OwnerAvatar image={list.owner.image} name={list.owner.name} />
+        <Text fontSize="sm" fontWeight="semibold">
+          created {daysjs(list.created_at).fromNow()}
+        </Text>
+        <Box
+          textAlign="center"
+          _hover={{ opacity: 0.8, cursor: "pointer" }}
+          transition="all cubic-bezier(0.4, 0, 0.2, 1) 300ms"
+        >
+          <Avatar
+            size="md"
+            src={list.owner.image || undefined}
+            name={list.owner.name || ""}
+            mb={1}
+          />
+          <Text fontSize="smaller">{list.owner.name}</Text>
+        </Box>
       </Flex>
+      <PlacesList entries={entries} />
     </Box>
   );
 };

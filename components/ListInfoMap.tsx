@@ -79,7 +79,7 @@ const ListInfo = ({ entries }: Props) => {
                     color="blue.400"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={getDirectionsUrl(e)}
+                    href={getDirectionsUrl(e.lat, e.lon, e.place_id)}
                   >
                     directions
                   </Link>
