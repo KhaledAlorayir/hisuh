@@ -5,10 +5,13 @@ import {
   MarkerF,
   useJsApiLoader,
 } from "@react-google-maps/api";
-import { useState } from "react";
 import { Entry } from "shared/types";
 import { getDirectionsUrl } from "shared/utils";
 import { libraries } from "shared/consts";
+import { ActivePlace } from "shared/atoms";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 type Props = {
   entries: Entry[];
@@ -19,8 +22,14 @@ const ListInfo = ({ entries }: Props) => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",
     libraries,
   });
+  const [activePlace, setActivePlace] = useAtom(ActivePlace);
+  const router = useRouter();
 
-  const [active, setActive] = useState<number>(-1);
+  useEffect(() => {
+    if (activePlace) {
+      setActivePlace(null);
+    }
+  }, [router.asPath]);
 
   const onMapLoad = (map: google.maps.Map) => {
     const bounds = new google.maps.LatLngBounds();
@@ -49,23 +58,19 @@ const ListInfo = ({ entries }: Props) => {
         zoom={10}
         onLoad={onMapLoad}
         options={{ disableDefaultUI: true, clickableIcons: false }}
-        /*         center={{
-          lat: entries[0].lat,
-          lng: entries[0].lon,
-        }} */
         mapContainerStyle={{ height: "100%", width: "100%" }}
       >
         {entries.map((e) => (
           <MarkerF
             onClick={() => {
-              setActive(e.id);
+              setActivePlace(e.id);
             }}
             title={e.name}
             key={e.id}
             position={{ lat: e.lat, lng: e.lon }}
           >
-            {active === e.id && (
-              <InfoWindowF onCloseClick={() => setActive(-1)}>
+            {activePlace === e.id && (
+              <InfoWindowF onCloseClick={() => setActivePlace(null)}>
                 <Box h="vh" p={4} textAlign="center">
                   <Text textColor="black" mb={2}>
                     {e.name}

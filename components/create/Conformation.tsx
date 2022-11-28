@@ -6,6 +6,7 @@ import useCreateList from "shared/hooks/useCreateList";
 import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import ListInfoTitle from "components/ListInfoTitle";
+import Share from "components/Share";
 
 type Props = {
   entries: Entry[];
@@ -37,12 +38,18 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
           <Heading as="h3" size="lg" mb={4}>
             List has been created!🥳
           </Heading>
-          <Text fontWeight="semibold" mb={4}>
-            use this link to share the list
-          </Text>
+
           <Link href={`http://localhost:3000/list/${data.id}`}>
             http://localhost:3000/list/{data.id}
           </Link>
+          <Box mt={4}>
+            {listInfo && (
+              <Share
+                name={listInfo.name}
+                url={`http://localhost:3000/list/${data.id}`}
+              />
+            )}
+          </Box>
         </Box>
       </Center>
     );

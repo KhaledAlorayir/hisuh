@@ -3,7 +3,7 @@ import { ListIdParamsSchema } from "shared/schemas";
 import prisma from "shared/prisma";
 import { Entry, ParsedList } from "shared/types";
 import ListInfoMap from "components/ListInfoMap";
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Text } from "@chakra-ui/react";
 import ListInfoTitle from "components/ListInfoTitle";
 import Like from "components/listInfo/Like";
 import { unstable_getServerSession } from "next-auth";
@@ -11,6 +11,7 @@ import { authOptions } from "pages/api/auth/[...nextauth]";
 import PlacesList from "components/listInfo/PlacesList";
 import daysjs from "dayjs";
 import rt from "dayjs/plugin/relativeTime";
+import Share from "components/Share";
 
 daysjs.extend(rt);
 
@@ -101,14 +102,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 
 /*
   TODO:
-  Migrate db to supabasee
+  -Migrate db to supabasee
+  -set placeslist in conform
 
-  1- compelete this
-  - share api
-    - active place
   2- bookmarks list
   3- users page showing there lists
   4- ud lists
+  1- private list  
 */
 
 const ListInfo = ({
@@ -127,7 +127,7 @@ const ListInfo = ({
           initalIsLiked={isLiked}
           list_id={list.id}
         />
-        <Text fontSize="sm" fontWeight="semibold">
+        <Text fontSize={{ base: "x-small", md: "sm" }} fontWeight="semibold">
           created {daysjs(list.created_at).fromNow()}
         </Text>
         <Box
@@ -136,15 +136,20 @@ const ListInfo = ({
           transition="all cubic-bezier(0.4, 0, 0.2, 1) 300ms"
         >
           <Avatar
-            size="md"
+            size={{ base: "sm", md: "md" }}
             src={list.owner.image || undefined}
             name={list.owner.name || ""}
             mb={1}
           />
-          <Text fontSize="smaller">{list.owner.name}</Text>
+          <Text fontSize={{ base: "x-small", md: "sm" }}>
+            {list.owner.name}
+          </Text>
         </Box>
       </Flex>
       <PlacesList entries={entries} />
+      <Box my={8} textAlign={{ base: "center", md: "start" }}>
+        <Share name={list.name} />
+      </Box>
     </Box>
   );
 };
