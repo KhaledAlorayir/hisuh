@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import ListInfoTitle from "components/ListInfoTitle";
 import Share from "components/Share";
+import PlacesList from "components/PlacesList";
 
 type Props = {
   entries: Entry[];
@@ -64,6 +65,9 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
             description={listInfo.description}
           />
           <ListInfoMap entries={entries} />
+          <Box my={8}>
+            <PlacesList entries={entries} />
+          </Box>
           <Flex my={8} justifyContent="flex-end">
             <Button
               w={{ base: "100%", md: "auto" }}

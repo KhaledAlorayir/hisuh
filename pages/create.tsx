@@ -8,9 +8,11 @@ import ListInfoForm from "components/create/ListInfoForm";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
-import PlacesList from "components/create/PlacesList";
+import PlacesListEdit from "components/create/PlacesListEdit";
 import Conformation from "components/create/Conformation";
 import Controls from "components/create/Controls";
+import { useAtom } from "jotai";
+import { ActivePlace } from "shared/atoms";
 
 type Props = {};
 
@@ -42,6 +44,7 @@ const create = (props: Props) => {
     lat: 24.774265,
     lng: 46.738586,
   });
+  const [activePlace, setActivePlace] = useAtom(ActivePlace);
 
   const {
     register: placeRegister,
@@ -79,7 +82,12 @@ const create = (props: Props) => {
           leftShown={showControls}
           rightShown={false}
           leftText="edit places"
-          leftAction={() => setIsConformation(false)}
+          leftAction={() => {
+            setIsConformation(false);
+            if (activePlace) {
+              setActivePlace(null);
+            }
+          }}
         />
         <Conformation
           entries={entries}
@@ -124,7 +132,7 @@ const create = (props: Props) => {
         editedEntry={editedEntry}
         setEditedEntry={setEditedEntry}
       />
-      <PlacesList
+      <PlacesListEdit
         entries={entries}
         setEntries={setEntries}
         setEditedEntry={setEditedEntry}

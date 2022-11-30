@@ -1,7 +1,7 @@
 import { Entry } from "shared/types";
 import { Box, Heading } from "@chakra-ui/react";
 import { SimpleGrid } from "@chakra-ui/react";
-import PlaceCard from "components/listInfo/PlaceCard";
+import PlaceCard from "components/PlaceCard";
 
 type Props = {
   entries: Entry[];

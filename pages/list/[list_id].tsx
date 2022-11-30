@@ -8,10 +8,11 @@ import ListInfoTitle from "components/ListInfoTitle";
 import Like from "components/listInfo/Like";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "pages/api/auth/[...nextauth]";
-import PlacesList from "components/listInfo/PlacesList";
+import PlacesList from "components/PlacesList";
 import daysjs from "dayjs";
 import rt from "dayjs/plugin/relativeTime";
 import Share from "components/Share";
+import Link from "next/link";
 
 daysjs.extend(rt);
 
@@ -100,17 +101,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   };
 };
 
-/*
-  TODO:
-  -Migrate db to supabasee
-  -set placeslist in conform
-
-  2- bookmarks list
-  3- users page showing there lists
-  4- ud lists
-  1- private list  
-*/
-
 const ListInfo = ({
   entries,
   list,
@@ -132,18 +122,20 @@ const ListInfo = ({
         </Text>
         <Box
           textAlign="center"
-          _hover={{ opacity: 0.8, cursor: "pointer" }}
+          _hover={{ opacity: 0.8 }}
           transition="all cubic-bezier(0.4, 0, 0.2, 1) 300ms"
         >
-          <Avatar
-            size={{ base: "sm", md: "md" }}
-            src={list.owner.image || undefined}
-            name={list.owner.name || ""}
-            mb={1}
-          />
-          <Text fontSize={{ base: "x-small", md: "sm" }}>
-            {list.owner.name}
-          </Text>
+          <Link href={`/user/${list.owner_id}`}>
+            <Avatar
+              size={{ base: "sm", md: "md" }}
+              src={list.owner.image || undefined}
+              name={list.owner.name || ""}
+              mb={1}
+            />
+            <Text fontSize={{ base: "x-small", md: "sm" }}>
+              {list.owner.name}
+            </Text>
+          </Link>
         </Box>
       </Flex>
       <PlacesList entries={entries} />

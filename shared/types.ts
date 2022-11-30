@@ -1,4 +1,5 @@
 import { List, Spot, Entry as prismaEntry } from "@prisma/client";
+import { type } from "os";
 
 export interface entryInsert {
   spot_id: number;
@@ -42,12 +43,19 @@ export type ParsedList = List & {
   entries: (prismaEntry & {
     spot: Spot;
   })[];
-  owner: {
-    name: string | null;
-    image: string | null;
-    id: string;
-  };
+  owner: UserDTO;
   _count: {
     likes: number;
   };
+};
+
+export interface UserLists {
+  lists: List[];
+  has_next: boolean;
+}
+
+export type UserDTO = {
+  id: string;
+  image: string | null;
+  name: string | null;
 };

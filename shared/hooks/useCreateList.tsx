@@ -38,7 +38,7 @@ const createList = async ({
   if (!validated.success) {
     throw new Error("validation error");
   }
-
+  console.log(body);
   const res = await axios.post("/api/list", validated.data);
   return res.data;
 };
