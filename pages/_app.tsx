@@ -4,16 +4,13 @@ import Chakra from "../components/Chakra";
 import Layout from "../components/Layout";
 import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import HeadTag from "components/HeadTag";
 
 const client = new QueryClient();
 
 /*
   TODO:
-  - set up profile with lists and user's public profile (could be same?)
-  - delete lists
-  - home page
-  - title head
-  - mobile test
+  - links in conformation
   - lunach v1
   
   extra: 
@@ -28,14 +25,17 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    <SessionProvider session={session}>
-      <QueryClientProvider client={client}>
-        <Chakra>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </Chakra>
-      </QueryClientProvider>
-    </SessionProvider>
+    <>
+      <HeadTag />
+      <SessionProvider session={session}>
+        <QueryClientProvider client={client}>
+          <Chakra>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </Chakra>
+        </QueryClientProvider>
+      </SessionProvider>
+    </>
   );
 }
