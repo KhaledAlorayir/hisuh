@@ -42,6 +42,9 @@ const NavBar = (props: Props) => {
               <Link href="/create">
                 <MenuItem>Create a list</MenuItem>
               </Link>
+              <Link href="/me">
+                <MenuItem>Profile</MenuItem>
+              </Link>
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </MenuList>
           </Menu>

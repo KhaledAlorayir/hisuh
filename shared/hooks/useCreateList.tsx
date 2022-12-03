@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { APIError, Entry, ListInfo } from "shared/types";
 import { ListBodySchema } from "shared/schemas";
 import { List } from "@prisma/client";
@@ -38,13 +38,13 @@ const createList = async ({
   if (!validated.success) {
     throw new Error("validation error");
   }
-  console.log(body);
   const res = await axios.post("/api/list", validated.data);
   return res.data;
 };
 
 const useCreateList = () => {
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation<
     List,
@@ -60,6 +60,9 @@ const useCreateList = () => {
         isClosable: true,
         duration: 8000,
       });
+    },
+    onSuccess: ({ owner_id }) => {
+      queryClient.invalidateQueries(["user", "lists", owner_id]);
     },
   });
 };

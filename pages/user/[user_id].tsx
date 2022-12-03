@@ -86,6 +86,7 @@ const User = ({ user: { id, image, name } }: Props) => {
           isFetchingNextPage={isFetchingNextPage}
           isLoading={isLoading}
           isSuccess={isSuccess}
+          text="user lists"
         />
       </Box>
     </Box>

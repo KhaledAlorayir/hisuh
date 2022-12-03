@@ -27,6 +27,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     take: 10,
     skip: cursor_id ? 1 : 0,
     cursor: cursor_id ? { id: cursor_id } : undefined,
+    orderBy: {
+      created_at: "desc",
+    },
   });
 
   let has_next = false;
@@ -39,6 +42,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       take: 1,
       skip: 1,
       cursor: { id: lists[lists.length - 1].id },
+      orderBy: {
+        created_at: "desc",
+      },
     });
 
     if (hasNextQuery.length > 0) {

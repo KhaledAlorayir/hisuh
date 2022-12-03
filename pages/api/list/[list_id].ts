@@ -42,10 +42,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   if (req.method === "DELETE") {
-    await prisma.list.delete({
+    const deletedList = await prisma.list.delete({
       where: { id: params.data.list_id },
     });
-    return res.status(200).json({ message: "list has been deleted" });
+    return res.status(200).json(deletedList);
   }
 
   if (req.method === "PATCH") {

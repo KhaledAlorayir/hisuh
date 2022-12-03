@@ -5,6 +5,7 @@ import {
   InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
 import { UserLists } from "shared/types";
+import { text } from "stream/consumers";
 import ListCard from "./ListCard";
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
   isLoading: boolean;
   isFetchingNextPage: boolean;
   isSuccess: boolean;
+  text: string;
 };
 
 const Lists = ({
@@ -25,6 +27,7 @@ const Lists = ({
   isLoading,
   isSuccess,
   lists,
+  text,
 }: Props) => {
   if (isLoading) {
     return <Spinner size="xl" />;
@@ -34,15 +37,13 @@ const Lists = ({
     <>
       {lists && isSuccess && (
         <Box>
+          <Text fontSize="lg" fontWeight="semibold">
+            {text} :
+          </Text>
           {lists.length === 0 ? (
-            <Text fontSize="lg" fontWeight="semibold">
-              no lists found!
-            </Text>
+            <Text my={2}>no lists found!</Text>
           ) : (
             <>
-              <Text fontSize="lg" fontWeight="semibold">
-                Lists :
-              </Text>
               <SimpleGrid
                 columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
                 spacing={5}
