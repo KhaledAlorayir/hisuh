@@ -40,14 +40,14 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
             List has been created!🥳
           </Heading>
 
-          <Link href={`http://localhost:3000/list/${data.id}`}>
-            http://localhost:3000/list/{data.id}
+          <Link href={`https://hisuh.vercel.app/list/${data.id}`}>
+            https://hisuh.vercel.app/list/{data.id}
           </Link>
           <Box mt={4}>
             {listInfo && (
               <Share
                 name={listInfo.name}
-                url={`http://localhost:3000/list/${data.id}`}
+                url={`https://hisuh.vercel.app/list/${data.id}`}
               />
             )}
           </Box>
