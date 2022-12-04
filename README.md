@@ -13,6 +13,7 @@
 - [x] choose and setup a UI component framework
   - https://chakra-ui.com/
 - [x] database desgin
+- [x] migrate db to supabase
 
 ### API Routes
 
@@ -24,8 +25,13 @@
 ### App
 
 - [x] auth with social providers (google and discord)
-- [] create lists
-- [] delete lists
+- [x] create lists
+  - [x] multi step form
+  - [x] google maps api
+  - [x] search places
+- [x] delete lists
+- [x] like lists
+- [x] users profile / their lists
 - [] update lists
-- [] browse and look up lists
-- [] like lists
+- [] bookmark list
+- [] private lists

@@ -156,7 +156,7 @@ const AddPlaceForm = ({
             />
             <FormError error={errors.description} />
           </Box>
-          <Button disabled={!isValid} variant="outline" type="submit" mr={4}>
+          <Button variant="outline" type="submit" mr={4}>
             {editedEntry ? "Edit" : "Add"} Place
           </Button>
           {editedEntry && (

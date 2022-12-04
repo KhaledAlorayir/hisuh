@@ -10,11 +10,6 @@ const client = new QueryClient();
 
 /*
   TODO:
-  - links in conformation
-  - lunach v1
-  
-  extra: 
-  - getserverside cache headers
   1- u lists
   2- bookmarks list
   3- private list  
