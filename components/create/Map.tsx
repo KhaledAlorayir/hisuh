@@ -3,9 +3,10 @@ import { Box, CircularProgress, Center, Text } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useState, useRef } from "react";
 import { MarkerItem } from "shared/types";
 import useGetPlaceDetails from "shared/hooks/useGetPlaceDetails";
-import { FieldValues, UseFormSetValue } from "react-hook-form";
+import { FieldValues, UseFormReset, UseFormSetValue } from "react-hook-form";
 import Search from "./Search";
 import { libraries } from "shared/consts";
+import userLocationIcon from "public/me.svg";
 
 type Props = {
   marker: MarkerItem | undefined;
@@ -13,9 +14,17 @@ type Props = {
   setValue: UseFormSetValue<FieldValues>;
   center: google.maps.LatLngLiteral;
   setCenter: Dispatch<SetStateAction<google.maps.LatLngLiteral>>;
+  reset: UseFormReset<FieldValues>;
 };
 
-const Map = ({ marker, setMarker, setValue, center, setCenter }: Props) => {
+const Map = ({
+  marker,
+  setMarker,
+  setValue,
+  center,
+  setCenter,
+  reset,
+}: Props) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY || "",
     libraries,
@@ -25,21 +34,27 @@ const Map = ({ marker, setMarker, setValue, center, setCenter }: Props) => {
 
   const mapRef = useRef<google.maps.Map>();
   const [initSearch, setInitSearch] = useState(false);
+  const [userLocation, setUserLocation] = useState<google.maps.LatLngLiteral>();
 
   const onMapLoad = (map: google.maps.Map) => {
     mapRef.current = map;
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         setCenter({ lat: latitude, lng: longitude });
+        setUserLocation({ lat: latitude, lng: longitude });
         setInitSearch(true);
       },
       () => {
         setInitSearch(true);
+      },
+      {
+        enableHighAccuracy: true,
       }
     );
   };
 
   const clickHandler = (e: any) => {
+    reset();
     if (e.placeId) {
       mutate(e.placeId, {
         onSuccess: (res) => {
@@ -96,6 +111,15 @@ const Map = ({ marker, setMarker, setValue, center, setCenter }: Props) => {
         >
           {marker && (
             <MarkerF position={{ lat: marker.lat, lng: marker.lng }} />
+          )}
+          {userLocation && (
+            <MarkerF
+              position={userLocation}
+              icon={{
+                url: "/me.svg",
+                scaledSize: new google.maps.Size(30, 30),
+              }}
+            />
           )}
         </GoogleMap>
       </Box>

@@ -3,6 +3,7 @@ import { Entry } from "shared/types";
 import { ListInfo } from "shared/types";
 import ListInfoMap from "components/ListInfoMap";
 import useCreateList from "shared/hooks/useCreateList";
+import useUpdateList from "shared/hooks/useUpdateList";
 import { Dispatch, SetStateAction } from "react";
 import Link from "next/link";
 import ListInfoTitle from "components/ListInfoTitle";
@@ -13,31 +14,65 @@ type Props = {
   entries: Entry[];
   listInfo: ListInfo | undefined;
   setShowControls: Dispatch<SetStateAction<boolean>>;
+  isEdit?: boolean;
+  listId?: string;
 };
 
-const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
-  const { mutate, isLoading, isSuccess, data } = useCreateList();
+const Conformation = ({
+  entries,
+  listInfo,
+  setShowControls,
+  isEdit,
+  listId,
+}: Props) => {
+  const {
+    mutate: create,
+    isLoading: Cisloading,
+    isSuccess: CisSuccess,
+    data: cData,
+  } = useCreateList();
+  const {
+    mutate: update,
+    isLoading: Uisloading,
+    isSuccess: UisSuccess,
+    data: uData,
+  } = useUpdateList();
+
+  const data = isEdit ? uData : cData;
+  const isSuccess = isEdit ? UisSuccess : CisSuccess;
+  const isLoading = isEdit ? Uisloading : Cisloading;
 
   const submitHandler = () => {
     if (listInfo) {
       setShowControls(false);
-      mutate(
-        { entries_info: entries, list_info: listInfo },
-        {
-          onError: () => {
-            setShowControls(true);
-          },
-        }
-      );
+      if (isEdit && listId) {
+        update(
+          { entries_info: entries, list_info: listInfo, listId },
+          {
+            onError: () => {
+              setShowControls(true);
+            },
+          }
+        );
+      } else {
+        create(
+          { entries_info: entries, list_info: listInfo },
+          {
+            onError: () => {
+              setShowControls(true);
+            },
+          }
+        );
+      }
     }
   };
 
-  if (isSuccess) {
+  if (isSuccess && data) {
     return (
       <Center height="100%">
         <Box textAlign="center">
           <Heading as="h3" size="lg" mb={4}>
-            List has been created!🥳
+            List has been {isEdit ? "updated!" : "created!"} 🥳
           </Heading>
 
           <Link href={`https://hisuh.vercel.app/list/${data.id}`}>
@@ -74,9 +109,11 @@ const Conformation = ({ entries, listInfo, setShowControls }: Props) => {
               colorScheme="messenger"
               onClick={submitHandler}
               isLoading={isLoading}
-              loadingText="creating the list..."
+              loadingText={
+                isEdit ? "updating the list..." : "creating the list..."
+              }
             >
-              Create List!
+              {isEdit ? "Update List!" : "Create List!"}
             </Button>
           </Flex>
         </Box>

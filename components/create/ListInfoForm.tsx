@@ -11,7 +11,7 @@ import FormError from "./FormError";
 
 type Props = {
   setListInfo: Dispatch<SetStateAction<ListInfo | undefined>>;
-  register: UseFormRegister<FieldValues>;
+  register: UseFormRegister<any>;
   handleSubmit: UseFormHandleSubmit<FieldValues>;
   errors: Partial<
     FieldErrorsImpl<{

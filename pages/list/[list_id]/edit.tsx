@@ -7,16 +7,34 @@ import { useForm } from "react-hook-form";
 import ListInfoForm from "components/create/ListInfoForm";
 import { GetServerSideProps } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { authOptions } from "../../api/auth/[...nextauth]";
 import PlacesListEdit from "components/create/PlacesListEdit";
 import Conformation from "components/create/Conformation";
 import Controls from "components/create/Controls";
 import { useAtom } from "jotai";
 import { ActivePlace } from "shared/atoms";
+import prisma from "shared/prisma";
+import { ListIdParamsSchema } from "shared/schemas";
 
-type Props = {};
+type Props = {
+  listInfo: ListInfo;
+  entries: Entry[];
+  listId: string;
+};
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  req,
+  res,
+  query,
+}) => {
+  const params = ListIdParamsSchema.safeParse(query);
+
+  if (!params.success) {
+    return {
+      notFound: true,
+    };
+  }
+
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session) {
@@ -27,16 +45,51 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       },
     };
   }
+  const list = await prisma.list.findUnique({
+    where: {
+      id: params.data.list_id,
+    },
+    include: {
+      entries: {
+        include: {
+          spot: true,
+        },
+      },
+    },
+  });
+
+  if (!list || list.owner_id !== session.uid) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const entries: Entry[] = list.entries.map(
+    ({ id, spot: { lat, lon, place_id }, name, description }) => ({
+      id,
+      lat,
+      lon,
+      name,
+      description: description,
+      place_id: place_id,
+    })
+  );
 
   return {
-    props: {},
+    props: {
+      entries,
+      listInfo: { name: list.name, description: list.description || "" },
+      listId: list.id,
+    },
   };
 };
 
-const create = (props: Props) => {
+const edit = (props: Props) => {
   const [marker, setMarker] = useState<MarkerItem>();
-  const [entries, setEntries] = useState<Entry[]>([]);
-  const [listInfo, setListInfo] = useState<ListInfo>();
+  const [entries, setEntries] = useState<Entry[]>(props.entries);
+  const [listInfo, setListInfo] = useState<ListInfo | undefined>(
+    props.listInfo
+  );
   const [editedEntry, setEditedEntry] = useState<Entry>();
   const [isConformation, setIsConformation] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(true);
@@ -62,6 +115,10 @@ const create = (props: Props) => {
     formState: { errors: listErrors },
   } = useForm({
     mode: "onTouched",
+    defaultValues: {
+      name: props.listInfo.name,
+      description: props.listInfo.description,
+    },
   });
 
   if (!listInfo) {
@@ -93,6 +150,8 @@ const create = (props: Props) => {
           entries={entries}
           listInfo={listInfo}
           setShowControls={setShowControls}
+          isEdit
+          listId={props.listId}
         />
       </Box>
     );
@@ -147,4 +206,4 @@ const create = (props: Props) => {
   );
 };
 
-export default create;
+export default edit;
