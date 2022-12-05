@@ -19,6 +19,7 @@ import { ListIdParamsSchema } from "shared/schemas";
 type Props = {
   listInfo: ListInfo;
   entries: Entry[];
+  listId: string;
 };
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
@@ -78,6 +79,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: {
       entries,
       listInfo: { name: list.name, description: list.description || "" },
+      listId: list.id,
     },
   };
 };
@@ -85,7 +87,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 const edit = (props: Props) => {
   const [marker, setMarker] = useState<MarkerItem>();
   const [entries, setEntries] = useState<Entry[]>(props.entries);
-  const [listInfo, setListInfo] = useState<ListInfo>();
+  const [listInfo, setListInfo] = useState<ListInfo | undefined>(
+    props.listInfo
+  );
   const [editedEntry, setEditedEntry] = useState<Entry>();
   const [isConformation, setIsConformation] = useState<boolean>(false);
   const [showControls, setShowControls] = useState<boolean>(true);
@@ -146,6 +150,8 @@ const edit = (props: Props) => {
           entries={entries}
           listInfo={listInfo}
           setShowControls={setShowControls}
+          isEdit
+          listId={props.listId}
         />
       </Box>
     );

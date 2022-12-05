@@ -30,7 +30,12 @@ export default function Home() {
           <Text fontSize="lg" fontWeight="semibold" fontFamily="mono">
             Create and Share Lists of your Favourite Places!
           </Text>
-          <Button onClick={clickHandler} w="100%" colorScheme="facebook">
+          <Button
+            onClick={clickHandler}
+            w="100%"
+            colorScheme="facebook"
+            isLoading={status === "loading"}
+          >
             Try it 🙌
           </Button>
         </Stack>

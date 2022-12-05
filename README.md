@@ -32,6 +32,6 @@
 - [x] delete lists
 - [x] like lists
 - [x] users profile / their lists
-- [] update lists
+- [x] update lists
 - [] bookmark list
 - [] private lists

@@ -55,7 +55,6 @@ const Map = ({
 
   const clickHandler = (e: any) => {
     reset();
-    console.log("clicked");
     if (e.placeId) {
       mutate(e.placeId, {
         onSuccess: (res) => {
