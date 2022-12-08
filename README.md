@@ -21,6 +21,9 @@
 - [x] delete lists
 - [x] update lists
 - [x] like lists
+- [x] get a place's name
+- [x] get user lists
+- [x] get user likes
 
 ### App
 
