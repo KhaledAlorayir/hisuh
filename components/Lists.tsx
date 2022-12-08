@@ -4,15 +4,14 @@ import {
   FetchNextPageOptions,
   InfiniteQueryObserverResult,
 } from "@tanstack/react-query";
-import { UserLists } from "shared/types";
-import { text } from "stream/consumers";
+import { ListsPagenation } from "shared/types";
 import ListCard from "./ListCard";
 
 type Props = {
   lists: List[] | undefined;
   fetchNextPage: (
     options?: FetchNextPageOptions | undefined
-  ) => Promise<InfiniteQueryObserverResult<UserLists, unknown>>;
+  ) => Promise<InfiniteQueryObserverResult<ListsPagenation, unknown>>;
   hasNextPage: boolean | undefined;
   isLoading: boolean;
   isFetchingNextPage: boolean;

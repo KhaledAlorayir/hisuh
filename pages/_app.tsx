@@ -10,8 +10,6 @@ const client = new QueryClient();
 
 /*
   TODO:
-  1- u lists
-  2- bookmarks list
   3- private list  
 */
 

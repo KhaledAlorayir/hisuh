@@ -20,28 +20,35 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { user_id, cursor_id } = validatedData.data;
 
-  const lists = await prisma.list.findMany({
+  const likes = await prisma.like.findMany({
     where: {
-      owner_id: user_id,
+      user_id,
     },
     take: 10,
     skip: cursor_id ? 1 : 0,
-    cursor: cursor_id ? { id: cursor_id } : undefined,
+    cursor: cursor_id
+      ? { list_id_user_id: { list_id: cursor_id, user_id } }
+      : undefined,
     orderBy: {
       created_at: "desc",
+    },
+    include: {
+      list: true,
     },
   });
 
   let has_next = false;
 
-  if (lists.length > 0) {
-    const hasNextQuery = await prisma.list.findMany({
+  if (likes.length > 0) {
+    const hasNextQuery = await prisma.like.findMany({
       where: {
-        owner_id: user_id,
+        user_id,
       },
       take: 1,
       skip: 1,
-      cursor: { id: lists[lists.length - 1].id },
+      cursor: {
+        list_id_user_id: { list_id: likes[likes.length - 1].list_id, user_id },
+      },
       orderBy: {
         created_at: "desc",
       },
@@ -51,6 +58,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       has_next = true;
     }
   }
+
+  const lists = likes.map((like) => like.list);
 
   const resBody: ListsPagenation = {
     lists,

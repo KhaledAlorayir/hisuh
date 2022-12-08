@@ -49,7 +49,7 @@ export type ParsedList = List & {
   };
 };
 
-export interface UserLists {
+export interface ListsPagenation {
   lists: List[];
   has_next: boolean;
 }

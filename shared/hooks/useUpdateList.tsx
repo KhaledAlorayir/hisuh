@@ -65,6 +65,7 @@ const useUpdateList = () => {
     },
     onSuccess: ({ owner_id }) => {
       queryClient.invalidateQueries(["user", "lists", owner_id]);
+      queryClient.invalidateQueries(["user", "likes", owner_id]);
     },
   });
 };
