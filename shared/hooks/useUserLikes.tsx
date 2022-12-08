@@ -3,8 +3,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { ListsPagenation } from "shared/types";
 import { useToast } from "@chakra-ui/react";
 
-const getUserLists = async (uid: string, cursor_id: string | null) => {
-  const { data } = await axios.get<ListsPagenation>(`/api/user/${uid}/lists`, {
+const getUserLikes = async (uid: string, cursor_id: string | null) => {
+  const { data } = await axios.get<ListsPagenation>(`/api/user/${uid}/likes`, {
     params: {
       cursor_id,
     },
@@ -12,12 +12,12 @@ const getUserLists = async (uid: string, cursor_id: string | null) => {
   return data;
 };
 
-const useUserLists = (uid: string) => {
+const useUserLikes = (uid: string) => {
   const toast = useToast();
 
   return useInfiniteQuery({
-    queryKey: ["user", "lists", uid],
-    queryFn: ({ pageParam }) => getUserLists(uid, pageParam),
+    queryKey: ["user", "likes", uid],
+    queryFn: ({ pageParam }) => getUserLikes(uid, pageParam),
     getNextPageParam: ({ lists, has_next }) => {
       if (has_next) {
         return lists[lists.length - 1].id;
@@ -37,4 +37,4 @@ const useUserLists = (uid: string) => {
   });
 };
 
-export default useUserLists;
+export default useUserLikes;

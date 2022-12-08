@@ -4,7 +4,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { APIError, UserLists } from "shared/types";
+import { APIError, ListsPagenation } from "shared/types";
 import { useToast } from "@chakra-ui/react";
 import { List } from "@prisma/client";
 
@@ -30,7 +30,7 @@ const useDeleteList = () => {
     onSuccess: ({ data: { owner_id, id: listId } }) => {
       queryClient.setQueryData(
         ["user", "lists", owner_id],
-        (data: InfiniteData<UserLists> | undefined) => {
+        (data: InfiniteData<ListsPagenation> | undefined) => {
           if (data) {
             return {
               ...data,
@@ -43,6 +43,7 @@ const useDeleteList = () => {
           return data;
         }
       );
+      queryClient.invalidateQueries(["user", "likes", owner_id]);
 
       toast({
         title: "list has been deleted!",

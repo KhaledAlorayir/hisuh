@@ -33,5 +33,5 @@
 - [x] like lists
 - [x] users profile / their lists
 - [x] update lists
-- [] bookmark list
+- [x] bookmark list (using likes)
 - [] private lists
