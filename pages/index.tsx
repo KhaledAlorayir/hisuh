@@ -7,21 +7,9 @@ import {
   Flex,
   Link,
 } from "@chakra-ui/react";
-import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/router";
+import NextLink from "next/link";
 
 export default function Home() {
-  const { status } = useSession();
-  const router = useRouter();
-
-  const clickHandler = () => {
-    if (status === "authenticated") {
-      router.push("/create");
-    } else if (status === "unauthenticated") {
-      signIn();
-    }
-  };
-
   return (
     <Flex h="100%" flexDir="column">
       <Center flex="1">
@@ -30,12 +18,7 @@ export default function Home() {
           <Text fontSize="lg" fontWeight="semibold" fontFamily="mono">
             Create and Share Lists of your Favourite Places!
           </Text>
-          <Button
-            onClick={clickHandler}
-            w="100%"
-            colorScheme="facebook"
-            isLoading={status === "loading"}
-          >
+          <Button w="100%" colorScheme="facebook" as={NextLink} href="/create">
             Try it 🙌
           </Button>
         </Stack>

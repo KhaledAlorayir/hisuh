@@ -1,39 +1,22 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Center, Spinner } from "@chakra-ui/react";
 import AddPlaceForm from "components/create/AddPlaceForm";
 import Map from "components/create/Map";
 import { useState } from "react";
 import { Entry, ListInfo, MarkerItem } from "shared/types";
 import { useForm } from "react-hook-form";
 import ListInfoForm from "components/create/ListInfoForm";
-import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
 import PlacesListEdit from "components/create/PlacesListEdit";
 import Conformation from "components/create/Conformation";
 import Controls from "components/create/Controls";
 import { useAtom } from "jotai";
 import { ActivePlace } from "shared/atoms";
+import { useSession } from "next-auth/react";
 
 type Props = {};
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const session = await unstable_getServerSession(req, res, authOptions);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
-
 const create = (props: Props) => {
+  const { status } = useSession({ required: true });
+
   const [marker, setMarker] = useState<MarkerItem>();
   const [entries, setEntries] = useState<Entry[]>([]);
   const [listInfo, setListInfo] = useState<ListInfo>();
@@ -63,6 +46,14 @@ const create = (props: Props) => {
   } = useForm({
     mode: "onTouched",
   });
+
+  if (status === "loading") {
+    return (
+      <Center h="100%">
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
 
   if (!listInfo) {
     return (

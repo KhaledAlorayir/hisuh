@@ -3,7 +3,10 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { ListsPagenation } from "shared/types";
 import { useToast } from "@chakra-ui/react";
 
-const getUserLists = async (uid: string, cursor_id: string | null) => {
+const getUserLists = async (
+  uid: string | undefined,
+  cursor_id: string | null
+) => {
   const { data } = await axios.get<ListsPagenation>(`/api/user/${uid}/lists`, {
     params: {
       cursor_id,
@@ -12,7 +15,7 @@ const getUserLists = async (uid: string, cursor_id: string | null) => {
   return data;
 };
 
-const useUserLists = (uid: string) => {
+const useUserLists = (uid: string | undefined) => {
   const toast = useToast();
 
   return useInfiniteQuery({
@@ -34,6 +37,7 @@ const useUserLists = (uid: string) => {
     },
     staleTime: Infinity,
     cacheTime: Infinity,
+    enabled: !!uid,
   });
 };
 
