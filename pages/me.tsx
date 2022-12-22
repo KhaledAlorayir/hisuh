@@ -1,42 +1,19 @@
-import { Box, Divider, Heading } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+import { Box, Center, Divider, Heading, Spinner } from "@chakra-ui/react";
 import useUserLists from "shared/hooks/useUserLists";
 import useUserLikes from "shared/hooks/useUserLikes";
 import Lists from "components/Lists";
 import { useMemo } from "react";
+import { useSession } from "next-auth/react";
 
-type Props = {
-  name: string | null | undefined;
-  uid: string;
-};
+type Props = {};
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  req,
-  res,
-}) => {
-  const session = await unstable_getServerSession(req, res, authOptions);
+const me = (props: Props) => {
+  const { data, status } = useSession({
+    required: true,
+  });
 
-  if (!session || !session.user) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {
-      name: session.user.name,
-      uid: session.uid,
-    },
-  };
-};
-
-const me = ({ name, uid }: Props) => {
-  const myLists = useUserLists(uid);
-  const myLikes = useUserLikes(uid);
+  const myLists = useUserLists(data?.uid);
+  const myLikes = useUserLikes(data?.uid);
 
   const lists = useMemo(() => {
     const parsedRes = myLists.data?.pages.map(({ lists }) => lists);
@@ -48,10 +25,18 @@ const me = ({ name, uid }: Props) => {
     return parsedRes?.flat();
   }, [myLikes.data]);
 
+  if (status === "loading") {
+    return (
+      <Center h="100%">
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
+
   return (
     <Box py={6} h="100%">
       <Heading mb={4} textAlign="center" size="md">
-        Hello {name}!
+        Hello {data.user?.name}!
       </Heading>
       <Divider />
       <Box my={12}>
